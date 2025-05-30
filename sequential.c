@@ -3,15 +3,30 @@
 #include <time.h>
 
 #define DEBUG 1            // comentar esta linha quando for medir tempo
+#define TAMANHO_BASE 1000
 
-void bs(int n, int * vetor)
+void printa_vetor(int *vetor, int tamanho, char* mensagem) {
+#ifdef DEBUG
+    printf("%s: ", mensagem);
+    for (int i = 0; i < tamanho; i++)
+        printf("[%03d] ", vetor[i]);
+    printf("\n");
+#endif
+}
+
+void inicializa_vetor(int *vetor, int tamanho) {
+    for (int i=0 ; i<tamanho; i++)              /* init array with worst case for sorting */
+        vetor[i] = tamanho-i;
+}
+
+void bubble_sort(int * vetor, int tamanho)
 {
     int c=0, d, troca, trocou =1;
 
-    while (c < (n-1) & trocou )
+    while (c < (tamanho-1) & trocou )
         {
         trocou = 0;
-        for (d = 0 ; d < n - c - 1; d++)
+        for (d = 0 ; d < tamanho - c - 1; d++)
             if (vetor[d] > vetor[d+1])
                 {
                 troca      = vetor[d];
@@ -25,40 +40,33 @@ void bs(int n, int * vetor)
 
 int main(int argc, char *argv[]) {
     if (argc != 2) {
-        fprintf(stderr, "uso: %s <tamanho_do_array>\n", argv[0]);
+        printf("uso: %s <multiplicador_de_trabalho>\n", argv[0]);
         return 1;
     }
 
-    int tamanho = atoi(argv[1]);
-    if (tamanho <= 0) {
-        fprintf(stderr, "erro: tamanho deve ser maior que 1\n");
+    //multiplicador do tamanho do problema para escalabilidade fraca
+    int multiplicador_trabalho = atoi(argv[1]);
+    if (multiplicador_trabalho <= 0) {
+        printf("valor invalido para multiplicador de trabalho.\n");
         return 1;
     }
 
-    int vetor[tamanho];
-    int i;
+    int tamanho_total = TAMANHO_BASE * multiplicador_trabalho;
 
-    for (i=0 ; i<tamanho; i++)              /* init array with worst case for sorting */
-        vetor[i] = tamanho-i;
+    int vetor[tamanho_total];
 
-    #ifdef DEBUG
-    printf("\nVetor: ");
-    for (i=0 ; i<tamanho; i++)              /* print unsorted array */
-        printf("[%03d] ", vetor[i]);
-    #endif
+    inicializa_vetor(vetor, tamanho_total);
+
+    printa_vetor(vetor, tamanho_total, "\nVetor desordenado: ");
 
     clock_t inicio = clock();
-    bs(tamanho, vetor);                     /* sort array */
+    bubble_sort(vetor, tamanho_total);                     /* sort array */
     clock_t fim = clock();
+
+    printa_vetor(vetor, tamanho_total, "\nVetor ordenado: ");
 
     double tempo = (double)(fim - inicio) / CLOCKS_PER_SEC;
     printf("\nTempo de execução: %.6f segundos\n", tempo);
-
-    #ifdef DEBUG
-    printf("\nVetor: ");
-    for (i=0 ; i<tamanho; i++)                              /* print sorted array */
-        printf("[%03d] ", vetor[i]);
-    #endif
 
     return 0;
 }
