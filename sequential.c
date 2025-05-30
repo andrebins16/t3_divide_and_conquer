@@ -3,7 +3,6 @@
 #include <time.h>
 
 #define DEBUG 1            // comentar esta linha quando for medir tempo
-#define ARRAY_SIZE 40      // trabalho final com o valores 10.000, 100.000, 1.000.000
 
 void bs(int n, int * vetor)
 {
@@ -36,20 +35,20 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    int vetor[ARRAY_SIZE];
+    int vetor[tamanho];
     int i;
 
-    for (i=0 ; i<ARRAY_SIZE; i++)              /* init array with worst case for sorting */
-        vetor[i] = ARRAY_SIZE-i;
+    for (i=0 ; i<tamanho; i++)              /* init array with worst case for sorting */
+        vetor[i] = tamanho-i;
 
     #ifdef DEBUG
     printf("\nVetor: ");
-    for (i=0 ; i<ARRAY_SIZE; i++)              /* print unsorted array */
+    for (i=0 ; i<tamanho; i++)              /* print unsorted array */
         printf("[%03d] ", vetor[i]);
     #endif
 
     clock_t inicio = clock();
-    bs(ARRAY_SIZE, vetor);                     /* sort array */
+    bs(tamanho, vetor);                     /* sort array */
     clock_t fim = clock();
 
     double tempo = (double)(fim - inicio) / CLOCKS_PER_SEC;
@@ -57,7 +56,7 @@ int main(int argc, char *argv[]) {
 
     #ifdef DEBUG
     printf("\nVetor: ");
-    for (i=0 ; i<ARRAY_SIZE; i++)                              /* print sorted array */
+    for (i=0 ; i<tamanho; i++)                              /* print sorted array */
         printf("[%03d] ", vetor[i]);
     #endif
 
